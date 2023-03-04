@@ -4,7 +4,7 @@
 This api requires [Python](https://www.python.org/downloads/release/python-3100/) v3.10 and [MySQL](https://www.mysql.com/) server up to run.
 
 #### Windows
-Create virtual environment, install the dependencies and start the server.
+Create virtual environment and install the dependencies.
 ```console
 cd finance_api
 python -m venv venv
@@ -12,7 +12,7 @@ venv\Scripts\activate
 cd app
 pip install -r requirements.txt
 ```
-Add database connection string to .env file.
+Add database connection string to .env file and start the server.
 ```console
 uvicorn main:app --port 8080
 ```
