@@ -11,6 +11,6 @@ app.include_router(other_router)
 
 @app.on_event("startup")
 async def startup():
-    # await drop_db()
+    await drop_db()
     await init_db()
     await fill_db()

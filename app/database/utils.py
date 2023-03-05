@@ -5,7 +5,8 @@ from helpers.filesystem import load_data, get_env
 from helpers.db import has_data
 from logger import db_logger as logger
 
-from typing import Callable, Any
+import asyncio
+from typing import Callable, Any, Coroutine
 
 SAMPLE_DATA_DIR = get_env('SAMPLE_DATA_DIR')
 
@@ -20,7 +21,7 @@ async def drop_db():
         await conn.run_sync(Base.metadata.drop_all)
 
 
-def gen_fill(model: Credit | User | Dictionary | Payment | Plan, columns: tuple[str], converters: tuple[Callable[[str], Any]]) -> Callable[[], None]:
+def gen_fill(model: Credit | User | Dictionary | Payment | Plan, columns: tuple[str], converters: tuple[Callable[[str], Any]]) -> Callable[[], Coroutine[Any, Any, None]]:
     async def fill():
         if not SAMPLE_DATA_DIR or await has_data(model): return
         data = load_data(SAMPLE_DATA_DIR + '/' + f'{model.__tablename__}.csv', converters)
@@ -70,7 +71,5 @@ fill_payments = gen_fill(
 
 async def fill_db():
     await fill_users()
-    await fill_credits()
-    await fill_dictionary()
-    await fill_plans()
-    await fill_payments()
+    await asyncio.gather(*[fill_credits(), fill_dictionary()])
+    await asyncio.gather(*[fill_plans(), fill_payments()])
