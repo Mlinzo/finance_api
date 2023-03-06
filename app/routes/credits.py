@@ -29,7 +29,7 @@ async def get_user_credits(user_id: int) -> List[UserCreditClose | UserCreditOpe
             issuance_sum=credit.body,
             accrued_interest=credit.accrued_interest,
             payments_sum_body=payments_sum,
-            payments_sum_percent=credit.percent-payments_sum
+            payments_sum_percent=credit.accrued_interest-payments_sum
         )
         user_credits.append(user_credit)
     return user_credits
